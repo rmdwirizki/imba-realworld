@@ -1,3 +1,5 @@
+import {Connect as conn} from '../core/Connect.imba'
+
 export tag Header
   def render
     <self>
@@ -16,5 +18,15 @@ export tag Header
               <a.nav-link route-to="/settings">
                 <i.ion-gear-a>
                 " Settings"
-            <li.nav-item>
-              <a.nav-link route-to="/register"> "Sign up"
+            
+            if !conn.checkAuth
+              <li.nav-item>
+                <a.nav-link route-to="/login"> "Sign in"
+              <li.nav-item>
+                <a.nav-link route-to="/register"> "Sign up"
+            else
+              <li.nav-item>
+                <a.nav-link route-to=('/profile/@' + conn.session:user:username)>
+                  <img.user-pic src=conn.session:user:image 
+                    attr:alt=conn.session:user:username>
+                  conn.session:user:username

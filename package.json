@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "imba src/server.imba",
-    "dev": "webpack-dev-server --content-base build/",
-    "build": "webpack",
-    "watch": "webpack --watch --progress --colors --display-modules"
+    "dev": "webpack-dev-server --content-base build/ --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --progress --colors --display-modules --mode development"
   },
   "repository": {
     "type": "git",

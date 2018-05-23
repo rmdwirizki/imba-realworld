@@ -10,7 +10,15 @@ import {Article} from './pages/Article.imba'
 import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
 
+import {Connect} from './core/Connect.imba'
+
 tag App
+	def build
+		if window:localStorage:_token
+			const data = await Connect.fetch 'CURRENT_USER'
+			if data:user 
+				Connect.setAuth data:user
+
 	def render
 		<self>
 			<Header>
