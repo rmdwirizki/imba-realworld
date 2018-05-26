@@ -1,15 +1,5 @@
 import {ApiAgent} from './ApiAgent.imba'
-
-# Private Function / Helper
-const toQueryString = do |obj|
-  const arr = Object.keys(obj).map do |i| 
-    if (obj[i] === undefined || obj[i] === null)
-      return ''
-    return 
-      window.encodeURIComponent(i) + '=' + 
-      window.encodeURIComponent(obj[i])
-  return arr.filter(do |str| return /\S/.test(str))
-    .join('&')
+import {toQueryString} from '../global/Helper.imba'
 
 class Connect
   prop api default: ApiAgent.new
@@ -26,24 +16,22 @@ class Connect
   
   def fetch key, query
     # Set Request Headers
-    let headers = Headers.new;
-    headers.append 'Content-type', 'application/json'
-
     const extra  = @api.endpoints[key][2]
+    let headers = Headers.new
+    headers.append 'Content-type', 'application/json'
     if extra && extra:auth
       headers.append 'Authorization', 'Token ' + window:localStorage:_token
 
     # Set Request Params
     const method = @api.endpoints[key][0]
-    let url = @api.root + @api.endpoints[key][1]
     let params = { headers: headers, method : method }
+    if query && method == 'POST'
+      params:body = JSON.stringify query
 
-    # Build url query
-    if query
-      if method == 'GET'
-        url = url + '?' + toQueryString query
-      elif method == 'POST'
-        params:body = JSON.stringify(query)
+    # Set Request URL
+    let url = @api.root + @api.endpoints[key][1]
+    if query && method == 'GET'
+      url = url + '?' + toQueryString query
     
     # Fetch request
     const res = await window.fetch url, params

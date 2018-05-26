@@ -5,8 +5,9 @@ export tag Home
   prop tags
 
   prop tagFilter
+  prop feedOptions default: false # Global feed
 
-  prop pageLimit  default: 20
+  prop pageLimit  default: 10
   prop pageIndex  default: 1
   prop pageLength default: 1
 
@@ -15,7 +16,8 @@ export tag Home
     self.getTags
 
   def getArticles
-    const data = await conn.fetch 'LIST_ARTICLES', { 
+    const action = (@feedOptions) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
+    const data = await conn.fetch action, { 
       "offset": @pageLimit * (@pageIndex - 1), 
       "limit" : @pageLimit,
       "tag"   : @tagFilter 
@@ -37,16 +39,12 @@ export tag Home
 
     self.getArticles
 
-  def setTag label
-    @tagFilter = label
+  def setFilter feedOptions, tagFilter=null
+    @feedOptions = feedOptions
+    @tagFilter = tagFilter
 
     self.setPage 1
   
-  def clearFilter
-    @tagFilter = null
-    
-    self.setPage 1
-
   # Imba doesn't support looping through usual means
   # like for(let i = 0; i < pageLength; i++)
   # So we must loop though an array like [1,2,..,pageLength]
@@ -68,10 +66,12 @@ export tag Home
             <div.col-md-9>
               <div.feed-toggle>
                 <ul.nav.nav-pills.outline-active>
+                  if conn.checkAuth
+                    <li.nav-item>
+                      <a.nav-link href="" .active=(!tagFilter && feedOptions) :tap.setFilter(true)> 
+                        "Your Feed"
                   <li.nav-item>
-                    <a.nav-link.disabled> "Your Feed"
-                  <li.nav-item>
-                    <a.nav-link href="" .active=!tagFilter :tap.clearFilter> 
+                    <a.nav-link href="" .active=(!tagFilter && !feedOptions) :tap.setFilter(false)> 
                       "Global Feed"
                   if tagFilter
                     <li.nav-item>
@@ -102,12 +102,13 @@ export tag Home
                     <p> article:description
                     <span> "Read more..."
 
-              <nav>
-                <ul.pagination>
-                  for num in pagenums
-                    <li.page-item .active=(num == pageIndex)>
-                      <a.page-link href="" :tap.setPage(num)> 
-                        num
+              if articles
+                <nav>
+                  <ul.pagination>
+                    for num in pagenums
+                      <li.page-item .active=(num == pageIndex)>
+                        <a.page-link href="" :tap.setPage(num)> 
+                          num
 
             <div.col-md-3>
               <div.sidebar>
@@ -118,5 +119,5 @@ export tag Home
 
                 <div.tag-list>
                   for label in tags
-                    <a.tag-pill.tag-default href="" :tap.setTag(label)> 
+                    <a.tag-pill.tag-default href="" :tap.setFilter(false, label)> 
                       label
