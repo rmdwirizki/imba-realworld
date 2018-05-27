@@ -3,16 +3,6 @@ import {toQueryString} from '../global/Helper.imba'
 
 class Connect
   prop api default: ApiAgent.new
-  prop session default: {
-    user: null
-  }
-
-  def checkAuth
-    return (@session:user == null) ? false : true
-
-  def setAuth user
-    window:localStorage:_token = user:token
-    @session:user = user
   
   def fetch key, query
     # Set Request Headers
@@ -25,7 +15,7 @@ class Connect
     # Set Request Params
     const method = @api.endpoints[key][0]
     let params = { headers: headers, method : method }
-    if query && method == 'POST'
+    if query && method != 'GET'
       params:body = JSON.stringify query
 
     # Set Request URL
@@ -35,6 +25,9 @@ class Connect
     
     # Fetch request
     const res = await window.fetch url, params
-    return res.json
+    try 
+      return await res.json
+    catch e 
+      return {}
 
 export var Connect = Connect.new

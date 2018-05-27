@@ -1,6 +1,11 @@
-import {Connect as conn} from '../core/Connect.imba'
+import {Auth} from '../request/Auth.imba'
 
 export tag Header
+  def logout
+    if window.confirm "Are you sure?"
+      Auth.logout
+      router.go '/'
+
   def render
     <self>
       <nav.navbar.navbar-light>
@@ -8,25 +13,30 @@ export tag Header
           <a.navbar-brand route-to='/'> "conduit"
           <ul.nav.navbar-nav.pull-xs-right>
             <li.nav-item>
-              # <!-- Add "active" class when you're on that page" -->
-              <a.nav-link.active route-to='/'> "Home"
-            <li.nav-item>
-              <a.nav-link route-to='/editor'>
-                <i.ion-compose>
-                " New Post"
-            <li.nav-item>
-              <a.nav-link route-to="/settings">
-                <i.ion-gear-a>
-                " Settings"
+              <a.nav-link route-to='/'> "Home"
             
-            if !conn.checkAuth
+            if Auth.check
+              <li.nav-item>
+                <a.nav-link route-to='/editor'>
+                  <i.ion-compose>
+                  " New Post"
+              <li.nav-item>
+                <a.nav-link route-to="/settings">
+                  <i.ion-gear-a>
+                  " Settings"
+
+            if !Auth.check
               <li.nav-item>
                 <a.nav-link route-to="/login"> "Sign in"
               <li.nav-item>
                 <a.nav-link route-to="/register"> "Sign up"
-            else
+            
+            if Auth.check
               <li.nav-item>
-                <a.nav-link route-to=('/profile/@' + conn.session:user:username)>
-                  <img.user-pic src=conn.session:user:image 
-                    attr:alt=conn.session:user:username>
-                  conn.session:user:username
+                <a.nav-link route-to=('/profile/@' + Auth.session:user:username)>
+                  <img.user-pic src=(Auth.session:user:image || 'https://static.productionready.io/images/smiley-cyrus.jpg') 
+                    attr:alt=Auth.session:user:username>
+                  Auth.session:user:username
+              <li.nav-item>
+                <a.nav-link href="" :tap.prevent.logout>
+                  "Sign out"

@@ -1,4 +1,5 @@
-import {Connect as conn} from '../core/Connect.imba'
+import {Auth} from '../request/Auth.imba'
+import {Connect} from '../request/Connect.imba'
 
 export tag Home
   prop articles
@@ -17,7 +18,7 @@ export tag Home
 
   def getArticles
     const action = (@feedOptions) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
-    const data = await conn.fetch action, { 
+    const data = await Connect.fetch action, { 
       "offset": @pageLimit * (@pageIndex - 1), 
       "limit" : @pageLimit,
       "tag"   : @tagFilter 
@@ -28,7 +29,7 @@ export tag Home
     Imba.commit
 
   def getTags
-    const data = await conn.fetch 'LIST_TAGS'
+    const data = await Connect.fetch 'LIST_TAGS'
     @tags = data:tags
 
     Imba.commit
@@ -66,7 +67,7 @@ export tag Home
             <div.col-md-9>
               <div.feed-toggle>
                 <ul.nav.nav-pills.outline-active>
-                  if conn.checkAuth
+                  if Auth.check
                     <li.nav-item>
                       <a.nav-link href="" .active=(!tagFilter && feedOptions) :tap.setFilter(true)> 
                         "Your Feed"
@@ -101,7 +102,13 @@ export tag Home
                     <h1> article:title
                     <p> article:description
                     <span> "Read more..."
+                    <ul.tag-list>
+                      for label,index in article:tagList
+                        <a.tag-pill.tag-default.tag-outline> 
+                          label
+                        break if index > 1
 
+              # Hide pagination when loading
               if articles
                 <nav>
                   <ul.pagination>

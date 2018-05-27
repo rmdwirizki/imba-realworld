@@ -1,38 +1,32 @@
-import {Connect as conn} from '../core/Connect.imba'
+import {Auth} from '../request/Auth.imba'
+import {Connect} from '../request/Connect.imba'
+import {Form, FormErrorList} from '../components/Form.imba'
 
-export tag LoginRegister
+export tag LoginRegister < Form
   prop username
   prop email
   prop password
 
-  prop errors
-  prop isLoading default: false
-
+  # @override Form.submit
   def submit
-    @isLoading = true
-    @errors = null
+    super
 
+  # @override Form.onSubmit
+  def onSubmit
     const actionKey = (params:path == '/register') ? 'REGISTER_USER' : 'LOGIN_USER'
-    let requestBody = {
+    let body = {"user": {}}
+    body:user:username = @username if params:path == '/register'
+    return await Connect.fetch actionKey, Object.assign body, {}, {
       "user": {
         "email"   : @email,
         "password": @password,
       }
     }
-    
-    if params:path == '/register'
-      requestBody:user:username = @username
-    const data = await conn.fetch actionKey, requestBody
-    
-    @isLoading = false
 
-    if !data:errors
-      conn.setAuth data:user
-      router.go '/'
-    else
-      @errors = data:errors
-
-    Imba.commit
+  # @override Form.onSubmitSuccess
+  def onSubmitSuccess result
+    Auth.login result:user
+    router.go '/'
 
   def render
     <self>
@@ -51,13 +45,7 @@ export tag LoginRegister
                 <p.text-xs-center>
                   <a route-to="/register"> "Need an account?"
 
-              if errors
-                <ul.error-messages>
-                  for field, value of errors
-                    " " # Bug in nested loop must have a node inside
-                    for message in value
-                      <li> 
-                        field + " " + message
+              <FormErrorList[errors]>
                     
               <form :submit.prevent.submit>
                 if params:path == '/register'

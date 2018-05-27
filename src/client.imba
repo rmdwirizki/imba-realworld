@@ -10,14 +10,11 @@ import {Article} from './pages/Article.imba'
 import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
 
-import {Connect} from './core/Connect.imba'
+import {Auth} from './request/Auth.imba'
 
 tag App
 	def build
-		if window:localStorage:_token
-			const data = await Connect.fetch 'CURRENT_USER'
-			if data:user 
-				Connect.setAuth data:user
+		Auth.tryLogin
 
 	def render
 		<self>
