@@ -1,61 +1,78 @@
+import {Auth} from '../request/Auth.imba'
+import {Connect} from '../request/Connect.imba'
+
+import {FeedToggle} from '../components/FeedToggle.imba'
+import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
+import {TagList} from '../components/TagList.imba'
+
+let tempUsername
+
+let state = { articles: ArticleListState.new('profile') }
+let toggleState = Object.assign state, {}, {
+  tabs: [{
+      label: 'My Articles',
+      isActive : do return state:articles:filter:author,
+      setFilter: do state:articles.setFilter false, { author: tempUsername }
+    },{
+      label: 'Favorited Articles',
+      isActive : do return state:articles:filter:favorited,
+      setFilter: do state:articles.setFilter false, { favorited: tempUsername }
+    }
+  ]
+}
+
 export tag Profile
+  prop profile
+
+  def load
+    self.getProfile
+    state:articles.setFilter false, { author: params:username.substr(1) }
+  
+  def getProfile
+    const data = await Connect.fetch 'GET_PROFILE', null, { 
+      # Remove @
+      "username": params:username.substr(1) 
+    }
+    @profile = data:profile
+    tempUsername = data:profile:username
+
+    Imba.commit
+
   def render
     <self>
       <div.profile-page>
 
-        <div.user-info>
+        if !profile
+          <div.user-info>
+            <div.container>
+              <div.row> 
+                <div.col-xs-12.col-md-10.offset-md-1>
+                  "Loading..."
+                  <br>
+                  <br>
+        else
+          <div.user-info>
+            <div.container>
+              <div.row>
+
+                <div.col-xs-12.col-md-10.offset-md-1>
+                  <img.user-img src=profile:image>
+                  <h4> profile:username
+                  <p>
+                    profile:bio
+
+                  if Auth.check && Auth.session:user:username != profile:username
+                    if profile:following
+                      <button.btn.btn-sm.btn-secondary.action-btn>
+                        <i.ion-minus-round>
+                        " Unfollow {profile:username}"
+                    else
+                      <button.btn.btn-sm.btn-outline-secondary.action-btn>
+                        <i.ion-plus-round>
+                        " Follow {profile:username}"
+
           <div.container>
             <div.row>
-
               <div.col-xs-12.col-md-10.offset-md-1>
-                <img.user-img src="http://i.imgur.com/Qr71crq.jpg">
-                <h4> "Eric Simons"
-                <p>
-                  "Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta from the Hunger Games"
-                <button.btn.btn-sm.btn-outline-secondary.action-btn>
-                  <i.ion-plus-round>
-                  " Follow Eric Simons" 
-
-        <div.container>
-          <div.row>
-
-            <div.col-xs-12.col-md-10.offset-md-1>
-              <div.articles-toggle>
-                <ul.nav.nav-pills.outline-active>
-                  <li.nav-item>
-                    <a.nav-link.active route-to="/profile/@someone"> "My Articles"
-                  <li.nav-item>
-                    <a.nav-link route-to="/profile/@someone/favorites"> "Favorited Articles"
-
-              <div.article-preview>
-                <div.article-meta>
-                  <a route-to="/profile/@someone">
-                    <img src="http://i.imgur.com/Qr71crq.jpg">
-                  <div.info>
-                    <a.author route-to="/profile/@someone"> "Eric Simons"
-                    <span.date> "January 20th"
-                  <button.btn.btn-outline-primary.btn-sm.pull-xs-right>
-                    <i.ion-heart>
-                    " 29"
-                <a.preview-link route-to="/article/lorem-ipsum">
-                  <h1> "How to build webapps that scale"
-                  <p> "This is the description for the post."
-                  <span> "Read more..."
-
-              <div.article-preview>
-                <div.article-meta>
-                  <a route-to="/profile/@someone">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg">
-                  <div.info>
-                    <a.author route-to="/profile/@someone"> "Albert Pai"
-                    <span.date> "January 20th"
-                  <button.btn.btn-outline-primary.btn-sm.pull-xs-right>
-                    <i.ion-heart>
-                    " 32"
-                <a.preview-link route-to="/article/lorem-ipsum">
-                  <h1> "The song you won't ever stop singing. No matter how hard you try."
-                  <p> "This is the description for the post."
-                  <span> "Read more..."
-                  <ul.tag-list>
-                    <li.tag-default.tag-pill.tag-outline> "Music"
-                    <li.tag-default.tag-pill.tag-outline> "Song"
+                <FeedToggle[toggleState]>
+                <ArticleList[state]>

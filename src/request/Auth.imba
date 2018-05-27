@@ -1,5 +1,4 @@
-import {Connect} from './Connect.imba'
-import {EventDispatcher as event} from '../global/EventDispatcher.imba'
+import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
 class Auth
   prop session default: {
@@ -18,7 +17,7 @@ class Auth
   def login user
     window:localStorage:_token = user:token
     @session:user = user
-    event.trigger 'userloggedin'
+    Event.trigger 'UserLoggedIn'
 
     Imba.commit
 
@@ -29,3 +28,6 @@ class Auth
         self.login data:user
   
 export var Auth = Auth.new
+
+# Make sure Auth loaded first
+import {Connect} from './Connect.imba'

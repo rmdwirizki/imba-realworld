@@ -1,6 +1,6 @@
 import {Auth} from '../request/Auth.imba'
 import {Connect} from '../request/Connect.imba'
-import {EventDispatcher as event} from '../global/EventDispatcher.imba'
+import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
 import {Form, FormErrorList} from '../components/Form.imba'
 
@@ -19,9 +19,9 @@ export tag Settings < Form
     @password = ''
     
   def build
-    event.on 'userloggedin', do |e|
+    Event.on 'UserLoggedIn', do |e|
       self.resetForm
-      event.off 'userloggedin'
+      Event.off 'UserLoggedIn'
 
   # @override Form.submit
   def submit

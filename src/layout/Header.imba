@@ -33,7 +33,7 @@ export tag Header
             
             if Auth.check
               <li.nav-item>
-                <a.nav-link route-to=('/profile/@' + Auth.session:user:username)>
+                <a.nav-link route-to="/profile/@{Auth.session:user:username}">
                   <img.user-pic src=(Auth.session:user:image || 'https://static.productionready.io/images/smiley-cyrus.jpg') 
                     attr:alt=Auth.session:user:username>
                   Auth.session:user:username

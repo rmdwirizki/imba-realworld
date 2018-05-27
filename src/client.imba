@@ -1,5 +1,7 @@
 import 'imba-router'
 
+import {Auth} from './request/Auth.imba'
+
 import {Header} from './layout/Header.imba'
 import {Footer} from './layout/Footer.imba'
 
@@ -9,8 +11,6 @@ import {CreateEditArticle} from './pages/CreateEditArticle.imba'
 import {Article} from './pages/Article.imba'
 import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
-
-import {Auth} from './request/Auth.imba'
 
 tag App
 	def build

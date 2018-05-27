@@ -9,6 +9,11 @@ class EventDispatcher
     @node.addEventListener eventName, func
     @eventFuncs[eventName] = func
 
+  def once eventName, func
+    if !@eventFuncs[eventName]
+      @node.addEventListener eventName, func
+      @eventFuncs[eventName] = func
+
   def off eventName
     @node.removeEventListener eventName, @eventFuncs[eventName]
     delete @eventFuncs[eventName]
