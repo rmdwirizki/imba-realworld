@@ -1,8 +1,10 @@
+import {Auth} from '../request/Auth.imba'
+
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 import {TagList} from '../components/TagList.imba'
 
-let state = { articles: ArticleListState.new('home') }
+let state = { articles: ArticleListState.new({limit: 10}) }
 let toggleState = Object.assign state, {}, {
   tabs: [{
       label: 'Your Feed',
@@ -18,7 +20,8 @@ let toggleState = Object.assign state, {}, {
 
 export tag Home
   def mount
-    state:articles.setFilter false, {}
+    state:articles:feeds  = Auth.check
+    state:articles:filter = {}
 
   def render
     <self>

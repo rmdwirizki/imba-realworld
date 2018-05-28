@@ -7,7 +7,7 @@ import {TagList} from '../components/TagList.imba'
 
 let tempUsername
 
-let state = { articles: ArticleListState.new('profile') }
+let state = { articles: ArticleListState.new({limit: 5}) }
 let toggleState = Object.assign state, {}, {
   tabs: [{
       label: 'My Articles',
@@ -22,27 +22,31 @@ let toggleState = Object.assign state, {}, {
 }
 
 export tag Profile
-  prop profile
+  prop userProfile
 
   def load
+    tempUsername = window.decodeURIComponent params:username.substr(1)
+    state:articles.setFilter false, { author: tempUsername }
+
     self.getProfile
-    state:articles.setFilter false, { author: params:username.substr(1) }
   
   def getProfile
-    const data = await Connect.fetch 'GET_PROFILE', null, { 
-      # Remove @
-      "username": params:username.substr(1) 
-    }
-    @profile = data:profile
-    tempUsername = data:profile:username
+    self.showLoading
+
+    const result = await Connect.fetch 'GET_PROFILE', null, { "username": tempUsername }
+    @userProfile = result:profile
 
     Imba.commit
+
+  def showLoading
+    @userProfile = null
+    render # manually use render if Imba.commit not working
 
   def render
     <self>
       <div.profile-page>
 
-        if !profile
+        if !userProfile
           <div.user-info>
             <div.container>
               <div.row> 
@@ -56,23 +60,23 @@ export tag Profile
               <div.row>
 
                 <div.col-xs-12.col-md-10.offset-md-1>
-                  <img.user-img src=profile:image>
-                  <h4> profile:username
+                  <img.user-img src=userProfile:image>
+                  <h4> userProfile:username
                   <p>
-                    profile:bio
+                    userProfile:bio
 
-                  if Auth.check && Auth.session:user:username != profile:username
-                    if profile:following
+                  if Auth.check && Auth.session:user:username != userProfile:username
+                    if userProfile:following
                       <button.btn.btn-sm.btn-secondary.action-btn>
                         <i.ion-minus-round>
-                        " Unfollow {profile:username}"
+                        " Unfollow {userProfile:username}"
                     else
                       <button.btn.btn-sm.btn-outline-secondary.action-btn>
                         <i.ion-plus-round>
-                        " Follow {profile:username}"
+                        " Follow {userProfile:username}"
 
-          <div.container>
-            <div.row>
-              <div.col-xs-12.col-md-10.offset-md-1>
-                <FeedToggle[toggleState]>
-                <ArticleList[state]>
+        <div.container>
+          <div.row>
+            <div.col-xs-12.col-md-10.offset-md-1>
+              <FeedToggle[toggleState]>
+              <ArticleList[state]>

@@ -2,51 +2,58 @@ import {Connect} from '../request/Connect.imba'
 import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
 export class ArticleListState
-  prop filter default: { tag: null, author: null, favorited: null }
-  prop feeds default: false
   prop id
+  prop filter
+  prop feeds
+  prop limit
 
-  def initialize id
-    @id = id
+  def initialize params
+    this:id = params:id || Date.now
+    this:filter = params:filter || { tag: null, author: null, favorited: null }
+    this:feeds  = params:feeds  || false
+    this:limit  = params:limit  || 20
 
   def setFilter feeds, filters
     this:filter = filters
     this:feeds  = feeds
     
-    Event.trigger 'RefreshArticles-' + @id
+    Event.trigger 'RefreshArticles-' + this:id
 
 export tag ArticleList
   prop articles
 
-  prop pageLimit  default: 10
   prop pageIndex  default: 1
   prop pageLength default: 1
 
   def setup
-    Event.on 'RefreshArticles-' + data:articles.id, do |e| 
+    Event.on 'RefreshArticles-' + data:articles:id, do |e| 
       self.setPage 1
 
   def mount
     self.getArticles
 
   def getArticles
+    self.showLoading
+
     const action = (data:articles:feeds) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
     const result = await Connect.fetch action, { 
-      "offset"   : @pageLimit * (@pageIndex - 1), 
-      "limit"    : @pageLimit,
+      "offset"   : data:articles:limit * (@pageIndex - 1), 
+      "limit"    : data:articles:limit,
       "tag"      : data:articles:filter:tag,
       "author"   : data:articles:filter:author,
       "favorited": data:articles:filter:favorited
     }
     @articles = result:articles
-    @pageLength = Math.ceil(result:articlesCount / @pageLimit)
+    @pageLength = Math.ceil(result:articlesCount / data:articles:limit)
 
+    Imba.commit
+
+  def showLoading
+    @articles = null
     Imba.commit
 
   def setPage page
     @pageIndex = page
-    @articles  = null
-
     self.getArticles
   
   # Imba doesn't support looping through usual means
