@@ -74,7 +74,7 @@ export tag ArticleList
         <div.article-preview>
           <div.article-meta>
             <a route-to="/profile/@{article:author:username}">
-              <img src=article:author:image>
+              <img src=(avatar(article:author:image))>
             <div.info>
               <a.author route-to="/profile/@{article:author:username}">
                 article:author:username

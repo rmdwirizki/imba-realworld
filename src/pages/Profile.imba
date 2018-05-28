@@ -60,7 +60,7 @@ export tag Profile
               <div.row>
 
                 <div.col-xs-12.col-md-10.offset-md-1>
-                  <img.user-img src=userProfile:image>
+                  <img.user-img src=(avatar(userProfile:image))>
                   <h4> userProfile:username
                   <p>
                     userProfile:bio

@@ -12,6 +12,12 @@ import {Article} from './pages/Article.imba'
 import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
 
+extend tag element
+	def asset resource=''
+		return window:location:pathname + 'build/' + resource
+	def avatar src
+		return src || 'https://static.productionready.io/images/smiley-cyrus.jpg'
+
 tag App
 	prop isAuthComplete default: false
 
@@ -19,11 +25,12 @@ tag App
 		setRouter Router.new {mode: 'hash'}
 		Auth.tryLogin do
 			@isAuthComplete = true
+			Imba.commit
 
 	def render
 		<self>
 			if !isAuthComplete
-				<object.self-centered data="/loader.svg" type="image/svg+xml">
+				<object.self-centered data=(asset('loader.svg')) type="image/svg+xml">
 			else
 				<Header>
 				<Home route='/'>
