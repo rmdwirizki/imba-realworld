@@ -1,1 +1,1 @@
-.article-preview{ clear: both; }
+.article-preview{ clear: both; }.self-centered{ position: absolute;margin: auto;top: 0;right: 0;bottom: 0;left: 0; }

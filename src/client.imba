@@ -13,20 +13,26 @@ import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
 
 tag App
+	prop isAuthComplete default: false
+
 	def build
-		Auth.tryLogin
+		Auth.tryLogin do
+			@isAuthComplete = true
 
 	def render
 		<self>
-			<Header>
-			<Home route='/'>
-			<LoginRegister route='/login'>
-			<LoginRegister route='/register'>
-			<CreateEditArticle route='/editor'>
-			<CreateEditArticle route='/editor/:slug'>
-			<Article route='/article/:slug'>
-			<Profile route='/profile/:username'>
-			<Settings route='/settings'>
-			<Footer>
-			
+			if !isAuthComplete
+				<object.self-centered data="/loader.svg" type="image/svg+xml">
+			else
+				<Header>
+				<Home route='/'>
+				<LoginRegister route='/login'>
+				<LoginRegister route='/register'>
+				<CreateEditArticle route='/editor'>
+				<CreateEditArticle route='/editor/:slug'>
+				<Article route='/article/:slug'>
+				<Profile route='/profile/:username'>
+				<Settings route='/settings'>
+				<Footer>
+
 Imba.mount <App>
