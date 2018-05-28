@@ -17,17 +17,15 @@ export tag Settings < Form
     @bio = Auth.session:user:bio
     @email = Auth.session:user:email
     @password = ''
-    
-  def setup
-    self.resetForm
-
-  # @override Form.submit
-  def submit
-    super
+  
+  def build
+    Event.on 'UserLoggedIn', do |e|
+      self.resetForm
+      Event.off 'UserLoggedIn'
 
   # @override Form.onSubmit
   def onSubmit
-    let body = {"user": {}};
+    let body = {"user": {}}
     body:user:password = @password if @password != ''
     return await Connect.fetch 'UPDATE_USER', Object.assign body, {}, {
       "user": {

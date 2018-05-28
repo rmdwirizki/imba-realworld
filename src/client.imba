@@ -1,4 +1,4 @@
-import 'imba-router'
+import {Router} from 'imba-router'
 
 import {Auth} from './request/Auth.imba'
 
@@ -16,6 +16,7 @@ tag App
 	prop isAuthComplete default: false
 
 	def build
+		setRouter Router.new {mode: 'hash'}
 		Auth.tryLogin do
 			@isAuthComplete = true
 

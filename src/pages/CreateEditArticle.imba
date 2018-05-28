@@ -15,10 +15,6 @@ export tag CreateEditArticle < Form
     @body = ''
     @tags = []
 
-  # @override Form.submit
-  def submit
-    super
-
   # @override Form.onSubmit
   def onSubmit
     return await Connect.fetch 'CREATE_ARTICLE', {

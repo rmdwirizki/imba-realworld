@@ -9,7 +9,8 @@ let toggleState = Object.assign state, {}, {
   tabs: [{
       label: 'Your Feed',
       isActive : do return !state:articles:filter:tag && state:articles:feeds,
-      setFilter: do state:articles.setFilter true, {}
+      setFilter: do state:articles.setFilter true, {},
+      needAuth : true
     },{
       label: 'Global Feed',
       isActive : do return !state:articles:filter:tag && !state:articles:feeds,

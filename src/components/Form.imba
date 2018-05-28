@@ -25,7 +25,6 @@ export tag Form
     self.beforeSubmit
     
     const res = await self.onSubmit
-    console.log res
     if res:errors
       self.onSubmitFail res:errors
     else

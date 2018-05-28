@@ -1,8 +1,9 @@
 import {Auth} from '../request/Auth.imba'
+
 import {Connect} from '../request/Connect.imba'
 import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
-# Default State:
+# Default State Example:
 # export var FeedToggleState = {
 #   tabs: [{
 #     label: 'Example Tab 1',
@@ -16,7 +17,8 @@ export tag FeedToggle
     return data:tabs[index].isActive
 
   def setFilter index
-    data:tabs[index].setFilter 
+    if !data:tabs[index]:needAuth || (data:tabs[index]:needAuth && Auth.check)
+      data:tabs[index].setFilter
 
   def render
     <self>
@@ -24,7 +26,7 @@ export tag FeedToggle
         <ul.nav.nav-pills.outline-active>
           for tab, index in data:tabs
             <li.nav-item>
-              <a.nav-link href="" .active=(isActive(index)) :tap.prevent.setFilter(index)> 
+              <a.nav-link href="" .active=(isActive(index)) .disabled=(data:tabs[index]:needAuth) :tap.prevent.setFilter(index)> 
                 data:tabs[index]:label
           if data:articles:filter:tag
             <li.nav-item>

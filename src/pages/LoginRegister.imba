@@ -7,21 +7,17 @@ export tag LoginRegister < Form
   prop email
   prop password
 
-  # @override Form.submit
-  def submit
-    super
-
   # @override Form.onSubmit
   def onSubmit
     const actionKey = (params:path == '/register') ? 'REGISTER_USER' : 'LOGIN_USER'
-    let body = {"user": {}}
-    body:user:username = @username if params:path == '/register'
-    return await Connect.fetch actionKey, Object.assign body, {}, {
+    let body = {
       "user": {
         "email"   : @email,
         "password": @password,
       }
     }
+    body:user:username = @username if params:path == '/register'
+    return await Connect.fetch actionKey, body
 
   # @override Form.onSubmitSuccess
   def onSubmitSuccess result
