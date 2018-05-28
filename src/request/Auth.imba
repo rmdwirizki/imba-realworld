@@ -17,15 +17,15 @@ class Auth
   def login user
     window:localStorage:_token = user:token
     @session:user = user
-    Event.trigger 'UserLoggedIn'
 
     Imba.commit
 
-  def tryLogin
+  def tryLogin callback
     if window:localStorage:_token
       const data = await Connect.fetch 'CURRENT_USER'
-      if data:user 
-        self.login data:user
+      self.login data:user if data:user 
+      
+      callback && callback()
   
 export var Auth = Auth.new
 

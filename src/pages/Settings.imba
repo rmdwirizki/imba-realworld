@@ -18,10 +18,8 @@ export tag Settings < Form
     @email = Auth.session:user:email
     @password = ''
     
-  def build
-    Event.on 'UserLoggedIn', do |e|
-      self.resetForm
-      Event.off 'UserLoggedIn'
+  def setup
+    self.resetForm
 
   # @override Form.submit
   def submit
