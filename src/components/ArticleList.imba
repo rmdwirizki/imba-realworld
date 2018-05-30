@@ -32,11 +32,10 @@ export tag ArticleList
       self.setPage 1
 
   def mount
-    self.getArticles
+    self.setPage 1
 
   def getArticles
     self.showLoading
-
     const action = (data:articles:feeds) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
     const result = await Connect.fetch action, { 
       "offset"   : data:articles:limit * (@pageIndex - 1), 
