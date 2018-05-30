@@ -1,4 +1,4 @@
-import {Page} from '../components/Page.imba'
+import {Page} from './Page.imba'
 
 export tag Form < Page
   prop errors default: []

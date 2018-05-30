@@ -1,7 +1,7 @@
 import {Auth} from '../request/Auth.imba'
 import {Connect} from '../request/Connect.imba'
 
-import {Page} from '../components/Page.imba'
+import {Page} from '../layout/Page.imba'
 
 import {FollowButton} from '../components/FollowButton.imba'
 import {FeedToggle} from '../components/FeedToggle.imba'

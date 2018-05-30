@@ -1,4 +1,4 @@
-import {Page} from '../components/Page.imba'
+import {Page} from '../layout/Page.imba'
 
 export tag Article < Page
   def render

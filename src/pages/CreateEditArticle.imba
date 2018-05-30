@@ -1,5 +1,5 @@
 import {Connect} from '../request/Connect.imba'
-import {Form, FormErrorList} from '../components/Form.imba'
+import {Form, FormErrorList} from '../layout/Form.imba'
 
 export tag CreateEditArticle < Form
   prop title

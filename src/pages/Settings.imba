@@ -1,7 +1,7 @@
 import {Auth} from '../request/Auth.imba'
 import {Connect} from '../request/Connect.imba'
 
-import {Form, FormErrorList} from '../components/Form.imba'
+import {Form, FormErrorList} from '../layout/Form.imba'
 
 export tag Settings < Form
   prop imageUrl

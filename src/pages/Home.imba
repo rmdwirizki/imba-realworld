@@ -1,6 +1,6 @@
 import {Auth} from '../request/Auth.imba'
 
-import {Page} from '../components/Page.imba'
+import {Page} from '../layout/Page.imba'
 
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
