@@ -3,9 +3,9 @@ import {Connect} from '../request/Connect.imba'
 
 import {Page} from '../components/Page.imba'
 
+import {FollowButton} from '../components/FollowButton.imba'
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
-import {TagList} from '../components/TagList.imba'
 
 let tempUsername
 
@@ -67,15 +67,7 @@ export tag Profile < Page
                   <p>
                     userProfile:bio
 
-                  if Auth.check && Auth.session:user:username != userProfile:username
-                    if userProfile:following
-                      <button.btn.btn-sm.btn-secondary.action-btn>
-                        <i.ion-minus-round>
-                        " Unfollow {userProfile:username}"
-                    else
-                      <button.btn.btn-sm.btn-outline-secondary.action-btn>
-                        <i.ion-plus-round>
-                        " Follow {userProfile:username}"
+                  <FollowButton user=userProfile>
 
         <div.container>
           <div.row>
