@@ -1,4 +1,6 @@
-export tag Article
+import {Page} from '../components/Page.imba'
+
+export tag Article < Page
   def render
     <self>
       <div.article-page>

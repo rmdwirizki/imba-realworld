@@ -1,5 +1,3 @@
-import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
-
 class Auth
   prop session default: {
     user: null
@@ -17,7 +15,6 @@ class Auth
   def login user
     window:localStorage:_token = user:token
     @session:user = user
-    Event.trigger 'UserLoggedIn'
     
     Imba.commit
 

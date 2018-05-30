@@ -1,4 +1,6 @@
-export tag Form
+import {Page} from '../components/Page.imba'
+
+export tag Form < Page
   prop errors default: []
   prop isLoading default: false
 

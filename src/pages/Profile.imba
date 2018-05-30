@@ -1,6 +1,8 @@
 import {Auth} from '../request/Auth.imba'
 import {Connect} from '../request/Connect.imba'
 
+import {Page} from '../components/Page.imba'
+
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 import {TagList} from '../components/TagList.imba'
@@ -21,7 +23,7 @@ let toggleState = Object.assign state, {}, {
   ]
 }
 
-export tag Profile
+export tag Profile < Page
   prop userProfile
 
   def load

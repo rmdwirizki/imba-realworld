@@ -36,11 +36,11 @@ tag App
 				<Home route='/'>
 				<LoginRegister route='/login'>
 				<LoginRegister route='/register'>
-				<CreateEditArticle route='/editor'>
-				<CreateEditArticle route='/editor/:slug'>
+				<CreateEditArticle route='/editor' need-auth=true>
+				<CreateEditArticle route='/editor/:slug' need-auth=true>
 				<Article route='/article/:slug'>
 				<Profile route='/profile/:username'>
-				<Settings route='/settings'>
+				<Settings route='/settings' need-auth=true>
 				<Footer>
 
 Imba.mount <App>

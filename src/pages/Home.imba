@@ -1,5 +1,7 @@
 import {Auth} from '../request/Auth.imba'
 
+import {Page} from '../components/Page.imba'
+
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 import {TagList} from '../components/TagList.imba'
@@ -19,7 +21,7 @@ let toggleState = Object.assign state, {}, {
   ]
 }
 
-export tag Home
+export tag Home < Page
   def mount
     state:articles:feeds  = Auth.check
     state:articles:filter = {}
