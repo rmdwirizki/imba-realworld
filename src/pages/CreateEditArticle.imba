@@ -15,8 +15,8 @@ export tag CreateEditArticle < Form
     @body = ''
     @tags = []
 
-  # @override Form.onSubmit
-  def onSubmit
+  # @override Form.submit
+  def submit
     return await Connect.fetch 'CREATE_ARTICLE', {
       "article": {
         "title"   : @title,
@@ -66,7 +66,7 @@ export tag CreateEditArticle < Form
             <div.col-md-10.offset-md-1.col-xs-12>
               <FormErrorList[errors]>
 
-              <form :submit.prevent.submit>
+              <form>
                 <fieldset>
                   <fieldset.form-group>
                     <input[title].form-control.form-control-lg type="text" placeholder="Article Title">
@@ -81,5 +81,5 @@ export tag CreateEditArticle < Form
                         <a.tag-pill.tag-default> 
                           <i.ion-close-round :tap.removeTag(index)>
                           " " + label
-                  <button.btn.btn-lg.pull-xs-right.btn-primary :tap.submit .disabled=isLoading type="button">
+                  <button.btn.btn-lg.pull-xs-right.btn-primary :tap.onsubmit .disabled=isLoading type="button">
                     "Publish Article"

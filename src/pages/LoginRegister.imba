@@ -7,8 +7,8 @@ export tag LoginRegister < Form
   prop email
   prop password
 
-  # @override Form.onSubmit
-  def onSubmit
+  # @override Form.submit
+  def submit
     const actionKey = (params:path == '/register') ? 'REGISTER_USER' : 'LOGIN_USER'
     let body = {
       "user": {
@@ -43,7 +43,7 @@ export tag LoginRegister < Form
 
               <FormErrorList[errors]>
                     
-              <form :submit.prevent.submit>
+              <form>
                 if params:path == '/register'
                   <fieldset.form-group>
                     <input[username].form-control.form-control-lg type="text" placeholder="Your Name">

@@ -4,12 +4,16 @@ export tag Form < Page
   prop errors default: []
   prop isLoading default: false
 
+  def submit
+    # Must be overwritten in child's tag
+
   def beforeSubmit
     @isLoading = true
     @errors = []
 
-  def onSubmit
-    # Must be overwritten in child's tag
+  def afterSubmit
+    @isLoading = false
+    Imba.commit
 
   def onSubmitSuccess res
     # Must be overwritten in child's tag
@@ -19,14 +23,13 @@ export tag Form < Page
       for message in value
         @errors.push(field + " " + message)
 
-  def afterSubmit
-    @isLoading = false
-    Imba.commit
+  # Default Handler
+  def onsubmit e
+    e.prevent
 
-  def submit
     self.beforeSubmit
     
-    const res = await self.onSubmit
+    const res = await self.submit
     if res:errors
       self.onSubmitFail res:errors
     else

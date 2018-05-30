@@ -8,7 +8,6 @@ class EventDispatcher
   def on eventName, func
     @node.addEventListener eventName, func
     @eventFuncs[eventName] = func
-    console.log @eventFuncs
 
   def once eventName, func
     if !@eventFuncs[eventName]

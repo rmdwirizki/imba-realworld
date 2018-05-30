@@ -20,8 +20,8 @@ export tag Settings < Form
   def setup
     self.resetForm
 
-  # @override Form.onSubmit
-  def onSubmit
+  # @override Form.submit
+  def submit
     let body = {"user": {}}
     body:user:password = @password if @password != ''
     return await Connect.fetch 'UPDATE_USER', Object.assign body, {}, {
@@ -50,7 +50,7 @@ export tag Settings < Form
 
               <FormErrorList[errors]>
 
-              <form :submit.prevent.submit>
+              <form>
                 <fieldset>
                   <fieldset.form-group>
                     <input[imageUrl].form-control type="text" placeholder="URL of profile picture">
