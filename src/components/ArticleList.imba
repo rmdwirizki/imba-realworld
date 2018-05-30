@@ -1,6 +1,8 @@
 import {Connect} from '../request/Connect.imba'
 import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
+import {LikeButton} from './LikeButton.imba'
+
 export class ArticleListState
   prop id
   prop filter
@@ -79,9 +81,7 @@ export tag ArticleList
               <a.author route-to="/profile/@{article:author:username}">
                 article:author:username
               <span.date> article:createdAt
-            <button.btn.btn-outline-primary.btn-sm.pull-xs-right>
-              <i.ion-heart>
-              " " + article:favoritesCount
+            <LikeButton article=article>
           <a.preview-link route-to="/article/{article:slug}">
             <h1> article:title
             <p> article:description
