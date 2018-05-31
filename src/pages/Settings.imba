@@ -18,7 +18,8 @@ export tag Settings < Form
     @password = ''
   
   def setup
-    self.resetForm
+    if Auth.check
+      self.resetForm
 
   # @override Form.submit
   def submit
