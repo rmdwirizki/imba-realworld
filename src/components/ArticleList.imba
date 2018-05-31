@@ -22,30 +22,31 @@ export class ArticleListState
     Event.trigger 'RefreshArticles-' + this:id
 
 export tag ArticleList
+  prop state
   prop articles
 
   prop pageIndex  default: 1
   prop pageLength default: 1
 
   def setup
-    Event.on 'RefreshArticles-' + data:articles:id, do |e| 
+    Event.on 'RefreshArticles-' + state:id, do |e| 
       self.setPage 1
 
   def mount
-    self.setPage 1
+    self.getArticles
 
   def getArticles
     self.showLoading
-    const action = (data:articles:feeds) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
+    const action = (state:feeds) ? 'FEED_ARTICLES' : 'LIST_ARTICLES';
     const result = await Connect.fetch action, { 
-      "offset"   : data:articles:limit * (@pageIndex - 1), 
-      "limit"    : data:articles:limit,
-      "tag"      : data:articles:filter:tag,
-      "author"   : data:articles:filter:author,
-      "favorited": data:articles:filter:favorited
+      "offset"   : state:limit * (@pageIndex - 1), 
+      "limit"    : state:limit,
+      "tag"      : state:filter:tag,
+      "author"   : state:filter:author,
+      "favorited": state:filter:favorited
     }
     @articles = result:articles
-    @pageLength = Math.ceil(result:articlesCount / data:articles:limit)
+    @pageLength = Math.ceil(result:articlesCount / state:limit)
 
     Imba.commit
 

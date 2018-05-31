@@ -13,23 +13,32 @@ import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 # }
 
 export tag FeedToggle
+  prop state
+  prop articleState
+
   def isActive index
-    return data:tabs[index].isActive
+    return state:tabs[index].isActive
+
+  def isDisabled index
+    if typeof state:tabs[index]['isDisabled'] === 'function'
+      return state:tabs[index].isDisabled
+    else
+      return false
 
   def setFilter index
-    if !data:tabs[index]:needAuth || (data:tabs[index]:needAuth && Auth.check)
-      data:tabs[index].setFilter
+    if !self.isDisabled index
+      state:tabs[index].setFilter
 
   def render
     <self>
       <div.feed-toggle>
         <ul.nav.nav-pills.outline-active>
-          for tab, index in data:tabs
+          for tab, index in state:tabs
             <li.nav-item>
-              <a.nav-link href="" .active=(isActive(index)) .disabled=(data:tabs[index]:needAuth) :tap.prevent.setFilter(index)> 
-                data:tabs[index]:label
-          if data:articles:filter:tag
+              <a.nav-link href="" .active=(isActive(index)) .disabled=(isDisabled(index)) :tap.prevent.setFilter(index)> 
+                state:tabs[index]:label
+          if articleState:filter:tag
             <li.nav-item>
               <a.nav-link.active> 
                 <i.ion-pound> 
-                " " + data:articles:filter:tag
+                " " + articleState:filter:tag

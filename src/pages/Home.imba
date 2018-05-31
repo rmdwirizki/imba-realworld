@@ -6,25 +6,27 @@ import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 import {TagList} from '../components/TagList.imba'
 
-let state = { articles: ArticleListState.new({limit: 10}) }
-let toggleState = Object.assign state, {}, {
+let articleState = ArticleListState.new({limit: 10})
+let toggleState  = {
   tabs: [{
       label: 'Your Feed',
-      isActive : do return !state:articles:filter:tag && state:articles:feeds,
-      setFilter: do state:articles.setFilter true, {},
-      needAuth : true
+      isActive  : do return !articleState:filter:tag && articleState:feeds,
+      isDisabled: do return !Auth.check,
+      setFilter : do articleState.setFilter true, {}
     },{
       label: 'Global Feed',
-      isActive : do return !state:articles:filter:tag && !state:articles:feeds,
-      setFilter: do state:articles.setFilter false, {}
+      isActive : do return !articleState:filter:tag && !articleState:feeds,
+      setFilter: do articleState.setFilter false, {}
     }
   ]
 }
 
 export tag Home < Page
+  def setup
+    articleState:feeds  = Auth.check
+
   def mount
-    state:articles:feeds  = Auth.check
-    state:articles:filter = {}
+    articleState:filter = {}
 
   def render
     <self>
@@ -36,7 +38,7 @@ export tag Home < Page
         <div.container.page>
           <div.row>
             <div.col-md-9>
-              <FeedToggle[toggleState]>
-              <ArticleList[state]>
+              <FeedToggle state=toggleState article-state=articleState>
+              <ArticleList state=articleState>
             <div.col-md-3>
-              <TagList[state]>
+              <TagList article-state=articleState>

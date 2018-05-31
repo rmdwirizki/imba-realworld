@@ -9,16 +9,16 @@ import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 
 let tempUsername
 
-let state = { articles: ArticleListState.new({limit: 5}) }
-let toggleState = Object.assign state, {}, {
+let articleState = ArticleListState.new({limit: 5})
+let toggleState  = {
   tabs: [{
       label: 'My Articles',
-      isActive : do return state:articles:filter:author,
-      setFilter: do state:articles.setFilter false, { author: tempUsername }
+      isActive : do return articleState:filter:author,
+      setFilter: do articleState.setFilter false, { author: tempUsername }
     },{
       label: 'Favorited Articles',
-      isActive : do return state:articles:filter:favorited,
-      setFilter: do state:articles.setFilter false, { favorited: tempUsername }
+      isActive : do return articleState:filter:favorited,
+      setFilter: do articleState.setFilter false, { favorited: tempUsername }
     }
   ]
 }
@@ -28,13 +28,12 @@ export tag Profile < Page
 
   def load
     tempUsername = window.decodeURIComponent params:username.substr(1)
-    state:articles.setFilter false, { author: tempUsername }
+    articleState.setFilter false, { author: tempUsername }
 
     self.getProfile
   
   def getProfile
     self.showLoading
-
     const result = await Connect.fetch 'GET_PROFILE', null, { "username": tempUsername }
     @userProfile = result:profile
 
@@ -72,5 +71,5 @@ export tag Profile < Page
         <div.container>
           <div.row>
             <div.col-xs-12.col-md-10.offset-md-1>
-              <FeedToggle[toggleState]>
-              <ArticleList[state]>
+              <FeedToggle state=toggleState article-state=articleState>
+              <ArticleList state=articleState>
