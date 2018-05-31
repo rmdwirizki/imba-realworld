@@ -1,7 +1,7 @@
 import {Connect} from '../request/Connect.imba'
 import {EventDispatcher as Event} from '../global/EventDispatcher.imba'
 
-export tag TagList
+export tag PopularTags
   prop articleState
   prop tags
 

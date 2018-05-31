@@ -52,7 +52,7 @@ export tag ArticleList
 
   def showLoading
     @articles = null
-    Imba.commit
+    render # manually use render if Imba.commit not working
 
   def setPage page
     @pageIndex = page
@@ -80,8 +80,8 @@ export tag ArticleList
             <div.info>
               <a.author route-to="/profile/@{article:author:username}">
                 article:author:username
-              <span.date> article:createdAt
-            <LikeButton article=article>
+              <span.date> timestamp(article:createdAt)
+            <LikeButton article=article floating=true>
           <a.preview-link route-to="/article/{article:slug}">
             <h1> article:title
             <p> article:description

@@ -12,11 +12,8 @@ import {Article} from './pages/Article.imba'
 import {Profile} from './pages/Profile.imba'
 import {Settings} from './pages/Settings.imba'
 
-extend tag element
-	def asset resource=''
-		return window:location:pathname + 'build/' + resource
-	def avatar src
-		return src || 'https://static.productionready.io/images/smiley-cyrus.jpg'
+# Add private method to every tag element
+import './global/Extend.imba'
 
 tag App
 	prop isAuthComplete default: false
@@ -36,7 +33,7 @@ tag App
 				<Home route='/'>
 				<LoginRegister route='/login'>
 				<LoginRegister route='/register'>
-				<CreateEditArticle route='/editor' need-auth=true>
+				<CreateEditArticle route='/editer' need-auth=true>
 				<CreateEditArticle route='/editor/:slug' need-auth=true>
 				<Article route='/article/:slug'>
 				<Profile route='/profile/:username'>

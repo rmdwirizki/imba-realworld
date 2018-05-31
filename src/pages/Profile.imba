@@ -9,7 +9,7 @@ import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
 
 let tempUsername
 
-let articleState = ArticleListState.new({limit: 5})
+let articleState = ArticleListState.new({id: 'Profile', limit: 5})
 let toggleState  = {
   tabs: [{
       label: 'My Articles',
@@ -27,6 +27,8 @@ export tag Profile < Page
   prop userProfile
 
   def load
+    super
+
     tempUsername = window.decodeURIComponent params:username.substr(1)
     articleState.setFilter false, { author: tempUsername }
 
@@ -35,7 +37,8 @@ export tag Profile < Page
   def getProfile
     self.showLoading
     const result = await Connect.fetch 'GET_PROFILE', null, { "username": tempUsername }
-    @userProfile = result:profile
+    const status = self.checkPageStatus result
+    @userProfile = result:profile if status
 
     Imba.commit
 
@@ -43,7 +46,7 @@ export tag Profile < Page
     @userProfile = null
     render # manually use render if Imba.commit not working
 
-  def render
+  def subrender
     <self>
       <div.profile-page>
 

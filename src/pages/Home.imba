@@ -4,9 +4,9 @@ import {Page} from '../layout/Page.imba'
 
 import {FeedToggle} from '../components/FeedToggle.imba'
 import {ArticleList, ArticleListState} from '../components/ArticleList.imba'
-import {TagList} from '../components/TagList.imba'
+import {PopularTags} from '../components/PopularTags.imba'
 
-let articleState = ArticleListState.new({limit: 10})
+let articleState = ArticleListState.new({id: 'Home', limit: 10})
 let toggleState  = {
   tabs: [{
       label: 'Your Feed',
@@ -41,4 +41,4 @@ export tag Home < Page
               <FeedToggle state=toggleState article-state=articleState>
               <ArticleList state=articleState>
             <div.col-md-3>
-              <TagList article-state=articleState>
+              <PopularTags article-state=articleState>

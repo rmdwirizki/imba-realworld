@@ -1,88 +1,63 @@
+import {Auth} from '../request/Auth.imba'
+import {Connect} from '../request/Connect.imba'
+
 import {Page} from '../layout/Page.imba'
 
+import {ArticleMeta} from '../components/ArticleMeta.imba'
+import {Markdown} from '../components/Markdown.imba'
+import {CommentList} from '../components/CommentList.imba'
+import {CommentInput} from '../components/CommentInput.imba'
+
 export tag Article < Page
-  def render
+  prop article
+
+  def load
+    super
+  
+  def mount
+    self.getArticle
+
+  def getArticle
+    self.showLoading
+    const result = await Connect.fetch 'GET_ARTICLE', null, { "slug": params:slug }
+    const status = self.checkPageStatus result
+    @article = result:article if status
+    
+    Imba.commit
+
+  def showLoading
+    @article = null
+    render # manually use render if Imba.commit not working
+
+  def subrender
     <self>
       <div.article-page>
+        if !article
+          <div.banner>
+            <div.container>
+              <h1> "Loading..."
+        else
+          <div.banner>
+            <div.container>
+              <h1> article:title
+              <ArticleMeta article=article>
 
-        <div.banner>
-          <div.container>
+          <div.container.page>
+            <div.row.article-content>
+              <div.col-md-12>
+                <p> article:description
+                <Markdown html=article:body>
+                <br>
+                <ul.tag-list>
+                  for label,index in article:tagList
+                    <a.tag-pill.tag-default.tag-outline> 
+                      label
+            <hr>
 
-            <h1> "How to build webapps that scale"
+            <div.article-actions>
+              <ArticleMeta article=article>
 
-            <div.article-meta>
-              <a route-to="/profile/@someone">
-                <img src="http://i.imgur.com/Qr71crq.jpg">
-              <div.info>
-                <a.author route-to="/profile/@someone"> "Eric Simons"
-                <span.date> "January 20th"
-              <button.btn.btn-sm.btn-outline-secondary>
-                <i.ion-plus-round>
-                " Follow Eric Simons" 
-                <span.counter> "(10)  "
-              <button.btn.btn-sm.btn-outline-primary>
-                <i.ion-heart>
-                " Favorite Post" 
-                <span.counter> "(29)"
-
-        <div.container.page>
-
-          <div.row.article-content>
-            <div.col-md-12>
-              <p> "Web development technologies have evolved at an incredible clip over the past few years."
-              <h2 id="introducing-ionic"> "Introducing RealWorld."
-              <p> "It's a great solution for learning how other frameworks work."
-
-          <hr>
-
-          <div.article-actions>
-            <div.article-meta>
-              <a route-to="/profile/@someone">
-                <img src="http://i.imgur.com/Qr71crq.jpg">
-              <div.info>
-                <a.author route-to="/profile/@someone"> "Eric Simons"
-                <span.date> "January 20th"
-
-              <button.btn.btn-sm.btn-outline-secondary>
-                <i.ion-plus-round>
-                " Follow Eric Simons" 
-                <span.counter> "(10) "
-              <button.btn.btn-sm.btn-outline-primary>
-                <i.ion-heart>
-                " Favorite Post" 
-                <span.counter> "(29)"
-
-          <div.row>
-
-            <div.col-xs-12.col-md-8.offset-md-2>
-
-              <form.card.comment-form>
-                <div.card-block>
-                  <textarea.form-control placeholder="Write a comment..." rows="3">
-                <div.card-footer>
-                  <img.comment-author-img src="http://i.imgur.com/Qr71crq.jpg">
-                  <button.btn.btn-sm.btn-primary>
-                    "Post Comment"
-              
-              <div.card>
-                <div.card-block>
-                  <p.card-text> "With supporting text below as a natural lead-in to additional content."
-                <div.card-footer>
-                  <a.comment-author route-to="/profile/@someone">
-                    <img.comment-author-img src="http://i.imgur.com/Qr71crq.jpg">
-                  " "
-                  <a.comment-author route-to="/profile/@someone"> "Jacob Schmidt"
-                  <span.date-posted> "Dec 29th"
-
-              <div.card>
-                <div.card-block>
-                  <p.card-text> "With supporting text below as a natural lead-in to additional content."
-                <div.card-footer>
-                  <a.comment-author route-to="/profile/@someone">
-                    <img.comment-author-img src="http://i.imgur.com/Qr71crq.jpg">
-                  " "
-                  <a.comment-author route-to="/profile/@someone"> "Jacob Schmidt"
-                  <span.date-posted> "Dec 29th"
-                  <span.mod-options>
-                    <i.ion-edit>
-                    <i.ion-trash-a>
+            <div.row>
+              <div.col-xs-12.col-md-8.offset-md-2>
+                <CommentInput article-slug=article:slug>
+                <CommentList article-slug=article:slug>

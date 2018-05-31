@@ -17,7 +17,7 @@ export tag Header
             
             if Auth.check
               <li.nav-item>
-                <a.nav-link route-to='/editor'>
+                <a.nav-link route-to='/editer'>
                   <i.ion-compose>
                   " New Post"
               <li.nav-item>

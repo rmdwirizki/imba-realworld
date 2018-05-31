@@ -1,1 +1,1 @@
-.article-preview + nav, .article-preview{ clear: both; }.self-centered{ position: absolute;margin: auto;top: 0;right: 0;bottom: 0;left: 0; }
+.article-preview + nav, .article-preview{ clear: both; }.m-right{ margin-right: 10px; }.inline-block{ display: inline-block; }.self-centered{ position: absolute;margin: auto;top: 0;right: 0;bottom: 0;left: 0; }.flex.self-centered{ display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: -1}

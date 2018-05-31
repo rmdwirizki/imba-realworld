@@ -2,6 +2,9 @@ import {Connect} from '../request/Connect.imba'
 import {Auth} from '../request/Auth.imba'
 
 export tag LikeButton
+  prop withCaption default: false
+  prop floating default: false
+
   prop article
 
   def favorite
@@ -26,7 +29,14 @@ export tag LikeButton
     Imba.commit
 
   def render
-    <self>
-      <button.btn.btn-outline-primary.btn-sm.pull-xs-right .active=article:favorited :tap.prevent.favorite>
+    <self .pull-xs-right=floating>
+      <button.btn.btn-outline-primary.btn-sm .pull-xs-right=floating .active=article:favorited :tap.prevent.favorite>
         <i.ion-heart>
-        " " + article:favoritesCount
+        if withCaption
+          if article:favorited
+            " Unfavorite Post "
+          else
+            " Favorite Post "
+          <span.counter> "({article:favoritesCount})"
+        else
+          " {article:favoritesCount}"

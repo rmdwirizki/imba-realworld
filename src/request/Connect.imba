@@ -38,9 +38,10 @@ class Connect
     
     # Fetch request
     const res = await window.fetch url, payload
+    
     try 
       return await res.json
     catch e 
-      return {}
+      return res
 
 export var Connect = Connect.new
